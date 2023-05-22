@@ -11,6 +11,7 @@
             required
             ngModel
             name="title"
+            [(ngModel)]="title"
           />
         </div>
         <div class="form-group">
@@ -21,14 +22,19 @@
             required
             ngModel
             name="content"
+            [(ngModel)]="content"
           ></textarea>
         </div>
         <button
-          class="btn btn-primary"
+          class="btn"
+          [ngClass]="isUpdate ? 'btn-success':'btn-primary'"
           type="submit"
           [disabled]="!postForm.valid"
         >
-          Send Post
+          {{isUpdate ? 'Update Post': 'Send Post'}}
+        </button>
+        <button class="btn btn-primary" (click)="clearInput($event)">
+          Clear input
         </button>
       </form>
     </div>
@@ -50,8 +56,16 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-xs-12 col-md-6 col-md-offset-3">
-      <p>No posts available!</p>
+    <div class="spinner-border" style="width: 6rem;height: 6rem" role="status" *ngIf="showLoading"></div>
+    <span class="sr-only" *ngIf="showLoading">Loading...</span>
+    <div class="col-xs-12 col-md-6 col-md-offset-3" *ngIf="!showLoading">
+      <p *ngIf="loadedPosts.length < 1">No posts available!</p>
+      <ul class="list-group" *ngIf="loadedPosts.length >= 1">
+        <li class="list-group-item" *ngFor="let post of loadedPosts" (click)="selectPost(post.id)">
+          <h3>{{post.title}}</h3>
+          <p>{{post.content}}</p>
+        </li>
+      </ul>
     </div>
   </div>
 </div>
